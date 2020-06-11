@@ -15,3 +15,6 @@ completes succesfully though, everything should work with no problems.
 
 This is a work in progress and may not function as expected. Much functionality is missing and some hardware 
 specific functionality has been temporarily hardcoded .
+
+main.js will eventually become the primary entry point for the project.
+For now, I'm running FireSequencer.js and seq_loop.js directly. 
