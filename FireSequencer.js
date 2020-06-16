@@ -1,5 +1,7 @@
 // process.env.UV_THREADPOOL_SIZE = 30;
 
+//test
+
 const os = require('os');
 const ipc = require('node-ipc');
 // This code spawns the seq_loop node process. In testing, we manually spawn
@@ -13,6 +15,7 @@ const ipc = require('node-ipc');
 //   stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
 // });
 const bitmaps = require('./bitmaps.js');
+const consts = require('./constants');
 var fs = require('fs');
 const midi = require('midi');
 var settings = {};
@@ -30,7 +33,7 @@ console.log(settings.osType);
 
 settings.flushedInput = false;
 debug("Flushing MIDI input buffers...");
-setTimeout(function() {
+setTimeout(function () {
   settings.flushedInput = true;
   debug("MIDI input buffer flush complete.");
 }, 500);
@@ -55,12 +58,12 @@ if (settings.osType != "Windows_NT") {
 }
 
 // Set up a new input.
-const fireMidiIn = new midi.Input();
-const fireMidiOut = new midi.Output();
-var midiInputDevices = [];
-var midiInputDevicesNames = [];
-var midiOutputDevices = [];
-var midiOutputDevicesNames = [];
+const fireMidiIn = new midi.Input(),
+  fireMidiOut = new midi.Output();
+var midiInputDevices = [],
+  midiInputDevicesNames = [],
+  midiOutputDevices = [],
+  midiOutputDevicesNames = [];
 
 // find out open Akai Fire MIDI input port
 // Also create array of all ports and open them.
@@ -99,20 +102,50 @@ for (let step = 0; step < fireMidiOut.getPortCount(); step++) {
 var btnLEDSysEx = [0xf0, 0x47, 0x7f, 0x43, 0x65, 0x00, 0x04, 0, 0, 0, 0, 0xF7];
 var gridBtnLEDcolor = JSON.parse('{"btn":[{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0},{"red":0,"grn":0,"blu":0}]}');
 
-const PATTERN_BROWSER_GRID_DIMRED = 0x01;
-const PATTERN_BROWSER_GRID_RED = 0x02;
-const SOLO_DIMGREEN = 0x01;
-const SOLO_GREEN = 0x02;
-const ALT_STOP_DIMYELLOW = 0x01;
-const ALT_STOP_YELLOW = 0x02;
-const STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW = 0x02;
-const STEP_NOTE_DRUM_PERF_SHIFT_REC_YELLOW = 0x04;
-const STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMRED = 0x01;
-const STEP_NOTE_DRUM_PERF_SHIFT_REC_RED = 0x03;
-const PATSONG_PLAY_DIMYELLOW = 0x01;
-const PATSONG_PLAY_YELLOW = 0x03;
-const PATSONG_PLAY_DIMGREEN = 0x02;
-const PATSONG_PLAY_GREEN = 0x04;
+const BTN_LED_OFF = 0,
+  PATTERN_BROWSER_GRID_DIMRED = 0x01,
+  PATTERN_BROWSER_GRID_RED = 0x02,
+  SOLO_DIMGREEN = 0x01,
+  SOLO_GREEN = 0x02,
+  ALT_STOP_DIMYELLOW = 0x01,
+  ALT_STOP_YELLOW = 0x02,
+  STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW = 0x02,
+  STEP_NOTE_DRUM_PERF_SHIFT_REC_YELLOW = 0x04,
+  STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMRED = 0x01,
+  STEP_NOTE_DRUM_PERF_SHIFT_REC_RED = 0x03,
+  PATSONG_PLAY_DIMYELLOW = 0x02,
+  PATSONG_PLAY_YELLOW = 0x04,
+  PATSONG_PLAY_DIMGREEN = 0x01,
+  PATSONG_PLAY_GREEN = 0x03,
+  TRACK_SELECTED_GREEN = 4,
+  TRACK_SELECTED_DIMGREEN = 2,
+  TRACK_SELECTED_RED = 3,
+  TRACK_SELECTED_DIMRED = 1,
+  //////////////////////////////////////////////////
+  PATTERN_UP_BTN_LED = 0,
+  PATTERN_DWN_BTN_LED = 1,
+  BROWSER_BTN_LED = 2,
+  GRID_LEFT_BTN_LED = 3,
+  GRID_RIGHT_BTN_LED = 4,
+  TRACK_ONE_MUTE_SOLO_BTN_LED = 5,
+  TRACK_TWO_MUTE_SOLO_BTN_LED = 6,
+  TRACK_THREE_MUTE_SOLO_BTN_LED = 7,
+  TRACK_FOUR_MUTE_SOLO_BTN_LED = 8,
+  TRACK_ONE_SELECT_LED = 9,
+  TRACK_TWO_SELECT_LED = 10,
+  TRACK_THREE_SELECT_LED = 11,
+  TRACK_FOUR_SELECT_LED = 12,
+  STEP_BTN_LED = 13,
+  NOTE_BTN_LED = 14,
+  DRUM_BTN_LED = 15,
+  PERFORM_BTN_LED = 16,
+  SHIFT_BTN_LED = 17,
+  ALT_BTN_LED = 18,
+  PAT_SONG_BTN_LED = 19,
+  PLAY_BTN_LED = 20,
+  STOP_BTN_LED = 21,
+  REC_BTN_LED = 22,
+  CHANNEL_MIXER_USER_USER_BTN_LED = 23;
 
 var notGridBtnLEDS = [
   PATTERN_BROWSER_GRID_DIMRED, // pattern up btn LED      0
@@ -125,48 +158,49 @@ var notGridBtnLEDS = [
   SOLO_GREEN, // track 2 btn LED         6
   SOLO_GREEN, // track 3 btn LED         7
   SOLO_GREEN, // track 4 btn LED         8
-  4, // track 1 selected LED    9
 
-  0, // track 2 selected LED    10
-  0, // track 3 selected LED    11
-  0, // track 4 selected LED    12
+  TRACK_SELECTED_GREEN, // track 1 selected LED    9
+  BTN_LED_OFF, // track 2 selected LED    10
+  BTN_LED_OFF, // track 3 selected LED    11
+  BTN_LED_OFF, // track 4 selected LED    12
+
   STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW, // step btn LED            13
   STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW, // note btn LED            14
-
   STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW, // drum btn LED            15
   STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW, // perform btn LED         16
+
   STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW, // shift btn LED           17
   ALT_STOP_DIMYELLOW, // alt btn LED             18
-  PATSONG_PLAY_DIMGREEN, // pat/song btn LED        19
+  BTN_LED_OFF, // pat/song btn LED        19
 
-  PATSONG_PLAY_DIMGREEN, // play btn LED            20
+  PATSONG_PLAY_DIMYELLOW, // play btn LED            20
   ALT_STOP_DIMYELLOW, // stop btn LED            21
-  STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW, // rec btn LED             22
+  BTN_LED_OFF, // rec btn LED             22
   17 // channel/mixer/user1/user2 LEDs    23
 ];
 
 
-const DIM_VAL = 10;
-const LED_COLOR_WHITE = (127 << 17) | (127 << 9) | (127 << 1);
-const LED_COLOR_WHITE_DIM = (DIM_VAL << 17) | (DIM_VAL << 9) | (DIM_VAL << 1);
-const LED_COLOR_RED = (127 << 17) | (0 << 9) | (0 << 1);
-const LED_COLOR_RED_DIM = (DIM_VAL << 17) | (0 << 9) | (0 << 1);
-const LED_COLOR_GREEN = (0 << 17) | (127 << 9) | (0 << 1);
-const LED_COLOR_GREEN_DIM = (0 << 17) | (DIM_VAL << 9) | (0 << 1);
-const LED_COLOR_BLUE = (0 << 17) | (0 << 9) | (127 << 1);
-const LED_COLOR_BLUE_DIM = (0 << 17) | (0 << 9) | (DIM_VAL << 1);
-const LED_COLOR_AQUA = (0 << 17) | (127 << 9) | (127 << 1);
-const LED_COLOR_AQUA_DIM = (0 << 17) | (DIM_VAL << 9) | (DIM_VAL << 1);
-const LED_COLOR_YELLOW = (127 << 17) | (127 << 9) | (0 << 1);
-const LED_COLOR_YELLOW_DIM = (DIM_VAL << 17) | (DIM_VAL << 9) | (0 << 1);
-const LED_COLOR_MAGENTA = (127 << 17) | (0 << 9) | (127 << 1);
-const LED_COLOR_MAGENTA_DIM = (DIM_VAL << 17) | (0 << 9) | (DIM_VAL << 1);
-const LED_COLOR_ORANGE = (127 << 17) | (65 << 9) | (0 << 1);
-const LED_COLOR_OFF = (0 << 17) | (0 << 9) | (0 << 1);
-const CHARCODE_UPARROW = 0x83;
-const CHARCODE_RIGHTARROW = 0x84;
-const CHARCODE_DOWNARROW = 0x85;
-const CHARCODE_LEFTARROW = 0x86;
+const DIM_VAL = 10,
+  LED_COLOR_WHITE = (127 << 17) | (127 << 9) | (127 << 1),
+  LED_COLOR_WHITE_DIM = (DIM_VAL << 17) | (DIM_VAL << 9) | (DIM_VAL << 1),
+  LED_COLOR_RED = (127 << 17) | (0 << 9) | (0 << 1),
+  LED_COLOR_RED_DIM = (DIM_VAL << 17) | (0 << 9) | (0 << 1),
+  LED_COLOR_GREEN = (0 << 17) | (127 << 9) | (0 << 1),
+  LED_COLOR_GREEN_DIM = (0 << 17) | (DIM_VAL << 9) | (0 << 1),
+  LED_COLOR_BLUE = (0 << 17) | (0 << 9) | (127 << 1),
+  LED_COLOR_BLUE_DIM = (0 << 17) | (0 << 9) | (DIM_VAL << 1),
+  LED_COLOR_AQUA = (0 << 17) | (127 << 9) | (127 << 1),
+  LED_COLOR_AQUA_DIM = (0 << 17) | (DIM_VAL << 9) | (DIM_VAL << 1),
+  LED_COLOR_YELLOW = (127 << 17) | (127 << 9) | (0 << 1),
+  LED_COLOR_YELLOW_DIM = (DIM_VAL << 17) | (DIM_VAL << 9) | (0 << 1),
+  LED_COLOR_MAGENTA = (127 << 17) | (0 << 9) | (127 << 1),
+  LED_COLOR_MAGENTA_DIM = (DIM_VAL << 17) | (0 << 9) | (DIM_VAL << 1),
+  LED_COLOR_ORANGE = (127 << 17) | (65 << 9) | (0 << 1),
+  LED_COLOR_OFF = (0 << 17) | (0 << 9) | (0 << 1),
+  CHARCODE_UPARROW = 0x83,
+  CHARCODE_RIGHTARROW = 0x84,
+  CHARCODE_DOWNARROW = 0x85,
+  CHARCODE_LEFTARROW = 0x86;
 
 var noteColors = {};
 noteColors.C = LED_COLOR_WHITE;
@@ -253,14 +287,14 @@ function trackPattern(patLength = 16, bpm = 120, beats = 4) {
   this.color.red = 127;
   this.color.grn = 0;
   this.color.blu = 127;
-  this.addEventByTime = function(data, timeOffset) {
+  this.addEventByTime = function (data, timeOffset) {
     this.events["id_" + this.eventIdIndex] = new patternEvent(data, this.eventIdIndex, timeOffset);
     this.eventIdIndex++;
   }
-  this.addEventByStep = function(data, stepNum) {
+  this.addEventByStep = function (data, stepNum) {
     this.events["id_" + stepNum] = new patternEvent(data, stepNum);
   }
-  this.removeEvent = function(id) {
+  this.removeEvent = function (id) {
     if (typeof id === 'number') {
       delete this.events["id_" + id];
     } else if (typeof id === 'string' && id.substring(0, 3) == "id_") {
@@ -283,7 +317,7 @@ function defaultTrack(stepMode = true) { // if called with first argument as fal
   this.trackName = "Track" + (this.num < 10 ? "0" + (this.num + 1) : (this.num + 1));
   this.channel = 0;
   this.CVportNum = 0;
-  this.addPattern = function(patLength, bpm, beats) {
+  this.addPattern = function (patLength, bpm, beats) {
     this.patterns["id_" + this.patternIdIndex] = new trackPattern(patLength, bpm, beats);
     if (stepMode) {
       for (var i = 0; i < patLength; i++) {
@@ -292,7 +326,7 @@ function defaultTrack(stepMode = true) { // if called with first argument as fal
     }
     return "id_" + this.patternIdIndex++;
   }
-  this.updateOutputIndex = function() {
+  this.updateOutputIndex = function () {
     let midiDevice = false;
     let found = false;
     for (let i = 0; i < midiOutputDevices.length; i++) {
@@ -308,7 +342,7 @@ function defaultTrack(stepMode = true) { // if called with first argument as fal
 var seq = {}; // object to hold state of things
 
 seq.track = [new defaultTrack(), new defaultTrack(), new defaultTrack(), new defaultTrack()];
-seq.track.forEach(function(track, index) {
+seq.track.forEach(function (track, index) {
   track.addPattern(16, 110, 4);
   track.addPattern(32, 110, 8);
   track.patterns["id_1"].viewArea = 1;
@@ -328,7 +362,7 @@ seq.mode.names = ["Step", "Note", "Drum", "Perform", "Alt-Step"];
 // represents a track and each button in that row is a step.
 // Each track sends its step data to which ever midi deivice is selected for
 // that that track in the settings menu.
-seq.mode.Step = function() {
+seq.mode.Step = function () {
   console.log("Step Mode");
   // load btn colors into gridBtnLEDcolor using track pattern info.
   // set step button to red, others to orange
@@ -349,7 +383,7 @@ seq.mode.Step = function() {
 // sequencer. Instead, the sequence progress through the steps based on the counts
 // set in the Alt-Step mode. It's a polyrythmic step generator using counts set
 // in the grid. The settings menu can be used to send data to gate outputs.
-seq.mode.altStep = function() {
+seq.mode.altStep = function () {
   console.log("Alt-Step Mode");
   notGridBtnLEDS[13] = STEP_NOTE_DRUM_PERF_SHIFT_REC_RED;
   notGridBtnLEDS[14] = LED_COLOR_OFF;
@@ -374,7 +408,7 @@ seq.mode.altStep = function() {
 //
 // Notes played will be sent the midi device and channel associated with the
 // currently selected track.
-seq.mode.Note = function() {
+seq.mode.Note = function () {
   console.log("Note Mode");
   notGridBtnLEDS[13] = LED_COLOR_OFF;
   notGridBtnLEDS[14] = STEP_NOTE_DRUM_PERF_SHIFT_REC_DIMYELLOW;
@@ -393,7 +427,7 @@ seq.mode.Note = function() {
 // In drum mode, each grid button can be mapped to a particular note or CC and
 // sent to any midi device / channel. This allows the entire grid to be used as
 // drums pads for any device connected.
-seq.mode.Drum = function() {
+seq.mode.Drum = function () {
   console.log("Drum Mode");
   notGridBtnLEDS[13] = LED_COLOR_OFF;
   notGridBtnLEDS[14] = LED_COLOR_OFF;
@@ -413,7 +447,7 @@ seq.mode.Drum = function() {
 // play the next pattern that is enabled. Grid buttons enable/disable the associated
 // patterns. This allows the creation on songs on the fly. By default, every pattern
 // shall be set to loop unless changed.
-seq.mode.Perform = function() {
+seq.mode.Perform = function () {
   console.log("Perform Mode");
   notGridBtnLEDS[13] = LED_COLOR_OFF;
   notGridBtnLEDS[14] = LED_COLOR_OFF;
@@ -446,7 +480,7 @@ seq.state.altPressed = false;
 seq.state.encBeingTouched = 0;
 seq.state.lastOLEDupdateTime = Date.now();
 seq.state.OLEDmemMapContents = "";
-seq.state.OLEDclearTimeout = setTimeout(function() {
+seq.state.OLEDclearTimeout = setTimeout(function () {
   clearOLEDmemMap();
   FireOLED_SendMemMap();
 }, 3000);
@@ -456,6 +490,12 @@ seq.state.currentBPM = 120;
 seq.state.gridBtnsPressedUpper = 0;
 seq.state.gridBtnsPressedLower = 0;
 seq.state.gridBtnsPressedLast = 0;
+
+seq.state.menu = {};
+seq.state.menu.entered = false;
+seq.state.menu.currentLevel = 0;
+
+// console.log(seq["state"]["menu"]["entered"]);
 
 seq.settings = {};
 seq.settings.general = {};
@@ -509,7 +549,7 @@ updateAllNotGridBtnLEDS();
 
 // By default, the device goes into Step Mode.
 seq.mode.Step();
-fs.writeFileSync('dataObjFile', JSON.stringify(seq.track));
+fs.writeFileSync('dataObjFile.json', JSON.stringify(seq.track));
 
 
 // settings();
@@ -523,10 +563,10 @@ ipc.config.silent = true;
 var seqLoop_ipcSocket; // ipc socket for the seq_loop.js process.
 
 ipc.serve(
-  function() {
+  function () {
     ipc.server.on(
       'get-seq.track-Var',
-      function(data, socket) {
+      function (data, socket) {
         // ipc.log('got a message : '.debug, data);
         // console.log(socket);
         seqLoop_ipcSocket = socket;
@@ -538,7 +578,7 @@ ipc.serve(
     ipc.server.on('step', stepHighlight);
     ipc.server.on(
       'socket.disconnected',
-      function(socket, destroyedSocketID) {
+      function (socket, destroyedSocketID) {
         console.log("client disconnect");
         // ipc.log('client ' + destroyedSocketID + ' has disconnected!');
       }
@@ -570,7 +610,7 @@ function playNote(eventData, socket = NULL) {
       midiDevice.sendMessage(newMidiMessage);
     }
     newMidiMessage[0] = 0x80 + seq.track[eventData.track].channel;
-    setTimeout(function() {
+    setTimeout(function () {
       if (midiDevice != false) {
         midiDevice.sendMessage(newMidiMessage);
       }
@@ -646,7 +686,7 @@ function stepHighlight(stepNumber) {
 
 ***************************************************************************************/
 
-fireMidiIn.on('message', async function(deltaTime, message) {
+fireMidiIn.on('message', async function (deltaTime, message) {
   if (settings.flushedInput) { // make sure we ignore incoming messages until the input butffers have been flushed.
     // console.log(`m: ${message} d: ${deltaTime}`);
     // console.log({
@@ -711,27 +751,38 @@ fireMidiIn.on('message', async function(deltaTime, message) {
               break;
           }
         }
-        let newMessage = [0xB0, 0, 0];
+        // let newMessage = [0xB0, 0, 0];
         switch (message[1]) {
           case 53: // rec button
+            clearOLEDmemMap();
             PlotStringToPixelMemMap("REC", 0, 0, 32, 2, 0);
-            FireOLED_SendMemMap(0);
+            PlotStringToPixelMemMap("Not working.",0,35,16,1,0);
+            seq.state.OLEDmemMapContents = "REC";
+            FireOLED_SendMemMap();
             ipc.server.emit(seqLoop_ipcSocket, 'seqRec');
             break;
           case 52: // stop button
+            clearOLEDmemMap();
             PlotStringToPixelMemMap("STOP", 0, 0, 32, 2, 0);
+            seq.state.OLEDmemMapContents = "STOP";
             FireOLED_SendMemMap(0);
+            notGridBtnLEDS[PLAY_BTN_LED] = PATSONG_PLAY_DIMYELLOW;
+            updateAllNotGridBtnLEDS();
             ipc.server.emit(seqLoop_ipcSocket, 'seqStop');
             updateAllGridBtnLEDs();
             break;
           case 51: // play button
+            clearOLEDmemMap();
             PlotStringToPixelMemMap("PLAY", 0, 0, 32, 2, 0);
+            seq.state.OLEDmemMapContents = "PLAY";
             FireOLED_SendMemMap(0);
+            notGridBtnLEDS[PLAY_BTN_LED] = PATSONG_PLAY_GREEN;
+            updateAllNotGridBtnLEDS();
             ipc.server.emit(seqLoop_ipcSocket, 'seqPlay');
             break;
           case 50: // pat/song button
-            PlotStringToPixelMemMap(String.fromCharCode(CHARCODE_LEFTARROW, CHARCODE_RIGHTARROW), PlotStringToPixelMemMap(String.fromCharCode(CHARCODE_UPARROW, CHARCODE_DOWNARROW), 0, 0, 16, 2, 0), 0, 16, 2, 0);
-            FireOLED_SendMemMap(0);
+            // PlotStringToPixelMemMap(String.fromCharCode(CHARCODE_LEFTARROW, CHARCODE_RIGHTARROW), PlotStringToPixelMemMap(String.fromCharCode(CHARCODE_UPARROW, CHARCODE_DOWNARROW), 0, 0, 16, 2, 0), 0, 16, 2, 0);
+            // FireOLED_SendMemMap(0);
             break;
           case 49: // alt button
             // when rpeseed, set alt flag
@@ -768,7 +819,7 @@ fireMidiIn.on('message', async function(deltaTime, message) {
               notGridBtnLEDS[12] = 4;
             } else if (seq.state.shiftPressed) {
               if (!seq.track[seq.state.selectedTrackRange + 3].solo) {
-                seq.track.forEach(function(track, i) {
+                seq.track.forEach(function (track, i) {
                   if (i != seq.state.selectedTrackRange + 3) {
                     track.mute = true;
                     track.solo = false;
@@ -777,8 +828,8 @@ fireMidiIn.on('message', async function(deltaTime, message) {
                     track.solo = true;
                   }
                 });
-              }else{
-                seq.track.forEach(function(track, i) {
+              } else {
+                seq.track.forEach(function (track, i) {
                   track.mute = false;
                   track.solo = false;
                 });
@@ -802,7 +853,7 @@ fireMidiIn.on('message', async function(deltaTime, message) {
               notGridBtnLEDS[12] = 0;
             } else if (seq.state.shiftPressed) {
               if (!seq.track[seq.state.selectedTrackRange + 2].solo) {
-                seq.track.forEach(function(track, i) {
+                seq.track.forEach(function (track, i) {
                   if (i != seq.state.selectedTrackRange + 2) {
                     track.mute = true;
                     track.solo = false;
@@ -811,8 +862,8 @@ fireMidiIn.on('message', async function(deltaTime, message) {
                     track.solo = true;
                   }
                 });
-              }else{
-                seq.track.forEach(function(track, i) {
+              } else {
+                seq.track.forEach(function (track, i) {
                   track.mute = false;
                   track.solo = false;
                 });
@@ -836,7 +887,7 @@ fireMidiIn.on('message', async function(deltaTime, message) {
               notGridBtnLEDS[12] = 0;
             } else if (seq.state.shiftPressed) {
               if (!seq.track[seq.state.selectedTrackRange + 1].solo) {
-                seq.track.forEach(function(track, i) {
+                seq.track.forEach(function (track, i) {
                   if (i != seq.state.selectedTrackRange + 1) {
                     track.mute = true;
                     track.solo = false;
@@ -845,8 +896,8 @@ fireMidiIn.on('message', async function(deltaTime, message) {
                     track.solo = true;
                   }
                 });
-              }else{
-                seq.track.forEach(function(track, i) {
+              } else {
+                seq.track.forEach(function (track, i) {
                   track.mute = false;
                   track.solo = false;
                 });
@@ -870,7 +921,7 @@ fireMidiIn.on('message', async function(deltaTime, message) {
               notGridBtnLEDS[12] = 0;
             } else if (seq.state.shiftPressed) {
               if (!seq.track[seq.state.selectedTrackRange + 0].solo) {
-                seq.track.forEach(function(track, i) {
+                seq.track.forEach(function (track, i) {
                   if (i != seq.state.selectedTrackRange + 0) {
                     track.mute = true;
                     track.solo = false;
@@ -879,8 +930,8 @@ fireMidiIn.on('message', async function(deltaTime, message) {
                     track.solo = true;
                   }
                 });
-              }else{
-                seq.track.forEach(function(track, i) {
+              } else {
+                seq.track.forEach(function (track, i) {
                   track.mute = false;
                   track.solo = false;
                 });
@@ -938,6 +989,21 @@ fireMidiIn.on('message', async function(deltaTime, message) {
             updateAllNotGridBtnLEDS();
             break;
           case 25: // Select button
+            if (seq.state.shiftPressed) {
+              // enter the menu
+              seq.state.menu.entered = !seq.state.menu.entered;
+              // console.log(seq.state.menu.entered);
+
+              // draw the menu items
+              seq.state.menu.currentLevel = [0];
+
+
+
+            } else if (seq.state.menu.entered) {
+              // draw the menu items
+            } else {
+
+            }
             break;
           case 19: // encoder 4 touch
             if (seq.state.encBeingTouched == 0 || seq.state.encBeingTouched == 19) {
@@ -1321,7 +1387,7 @@ function updateAllGridBtnLEDs() {
     }
   }
   let count = 0;
-  let updateInterval = setInterval(function() {
+  let updateInterval = setInterval(function () {
     let sysEx = btnLEDSysEx;
     sysEx[7] = count;
     sysEx[8] = (gridBtnLEDcolor.btn[count].red) & 0x7f;
@@ -1338,7 +1404,7 @@ function updateAllGridBtnLEDs() {
 function updateAllNotGridBtnLEDS() {
   let message = [0xB0, 0, 0];
   var count = 0;
-  let intVal = setInterval(function() {
+  let intVal = setInterval(function () {
     if (count < 23) { // button id's 31-53
       message[1] = count + 31;
       message[2] = notGridBtnLEDS[count];
@@ -1368,7 +1434,7 @@ function updateAllNotGridBtnLEDS() {
 */
 function FireOLED_SendMemMap(section = 0) {
   clearTimeout(seq.state.OLEDclearTimeout);
-  seq.state.OLEDclearTimeout = setTimeout(function() {
+  seq.state.OLEDclearTimeout = setTimeout(function () {
     clearOLEDmemMap();
     FireOLED_SendMemMap();
   }, seq.settings.general.OLEDtimeout * 1000);
@@ -1497,6 +1563,7 @@ function clearOLEDmemMap() {
       fireOLED_pixelMemMap[i][p] = 0;
     }
   }
+  seq.state.OLEDmemMapContents = "";
 }
 
 async function debug(s, lvl, comment) {
@@ -1566,3 +1633,156 @@ process.on('uncaughtException', exitHandler.bind(null, {
 // 4 * 0.5 = total pattern time
 
 // (60/bpm)*(patternLength/stepPerBeat)
+
+/*var settings = {};
+settings.globalSettings = {};
+settings.globalSettings.text = "Global";
+settings.    "entry": {
+      "id_0": {
+        "text": "Encoder Bank",
+        "entry": {
+          "id_0": {
+            "text": "# of Banks",
+            "entry": {
+              "id_0": {
+                "text": "4 Banks",
+                "data": "4BankMode"
+              },
+              "id_1": {
+                "text": "16 Banks",
+                "data": "16BankMode"
+              }
+            },
+            "fn": "setEncoderBankMode"
+          },
+          "id_1": {
+            "text": "Global Control",
+            "entry": {
+              "id_0": {
+                "text": "Enabled",
+                "data": true
+              },
+              "id_1": {
+                "text": "Per Project",
+                "data": false
+              }
+            },
+            "fn": "setEncoderBankGlobalEn"
+          }
+        }
+      },
+      "id_1": {
+        "text": "MIDI Devices",
+        "entry": {
+          "id_0": {
+            "text": "Connected Devices",
+            "data": "fn_listConnectedDevices",
+            "entry": {
+              "id_0": {
+                "text": "Remove Device",
+                "data": "fn_removeDevice"
+              },
+              "id_1": {
+                "text": "Listen Channel",
+                "data": 0,
+                "entry": {
+                  "id_0": {
+                    "text": "Omni",
+                    "data": 0
+                  },
+                  "id_1": {
+                    "text": "1",
+                    "data": 1
+                  },
+                  "id_2": {
+                    "text": "2",
+                    "data": 2
+                  },
+                  "id_3": {
+                    "text": "3",
+                    "data": 3
+                  },
+                  "id_4": {
+                    "text": "4",
+                    "data": 4
+                  },
+                  "id_5": {
+                    "text": "5",
+                    "data": 5
+                  },
+                  "id_6": {
+                    "text": "6",
+                    "data": 6
+                  },
+                  "id_7": {
+                    "text": "7",
+                    "data": 7
+                  },
+                  "id_8": {
+                    "text": "8",
+                    "data": 8
+                  },
+                  "id_9": {
+                    "text": "9",
+                    "data": 9
+                  },
+                  "id_10": {
+                    "text": "10",
+                    "data": 10
+                  },
+                  "id_11": {
+                    "text": "11",
+                    "data": 11
+                  },
+                  "id_12": {
+                    "text": "12",
+                    "data": 12
+                  },
+                  "id_13": {
+                    "text": "13",
+                    "data": 13
+                  },
+                  "id_14": {
+                    "text": "14",
+                    "data": 14
+                  },
+                  "id_15": {
+                    "text": "15",
+                    "data": 15
+                  },
+                  "id_16": {
+                    "text": "16",
+                    "data": 16
+                  }
+                }
+              },
+              "id_2": {
+                "text": "Clock Source",
+                "data": false,
+                "entry": {
+                  "id_0": {
+                    "text": "Enabled",
+                    "data": true
+                  },
+                  "id_1": {
+                    "text": "Disabled",
+                    "data": false
+                  }
+                }
+              }
+            }
+          },
+          "id_1": {
+            "text": "Available Devices",
+            "data": "fn_listAvailableDevices"
+          }
+        },
+        "data": {
+          "connected": {}
+        }
+      }
+    }
+  },
+  "project": {},
+  "track": {}
+}*/
